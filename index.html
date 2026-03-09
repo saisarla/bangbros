@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StyleAI — Intelligent Personal Styling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Grain overlay -->
+<div class="grain"></div>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">S</div>
+      <span class="logo-text">StyleAI</span>
+      <span class="logo-badge">GROQ × OPENCV</span>
+    </div>
+    <div class="api-zone" id="apiZone">
+      <input type="password" id="apiKeyInput" placeholder="Enter Groq API Key…" class="api-input" autocomplete="off" />
+      <button class="api-btn" id="apiConnectBtn">Connect</button>
+    </div>
+    <div class="api-connected hidden" id="apiConnected">
+      <span class="dot-live"></span>
+      <span class="connected-label">Groq Connected</span>
+      <button class="disconnect-btn" id="disconnectBtn">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">AI-Powered Personal Styling</p>
+    <h1 class="hero-title">
+      Fashion intelligence,<br />
+      <em>engineered for you.</em>
+    </h1>
+    <p class="hero-sub">
+      OpenCV face detection · PIL colour analysis · LLaMA 3.3 70B via Groq<br />
+      Upload a photo and let the AI build your complete style profile.
+    </p>
+    <div class="tech-pills">
+      <span class="pill">Flask</span>
+      <span class="pill">Groq LLaMA 3.3 70B</span>
+      <span class="pill">OpenCV</span>
+      <span class="pill">PIL / Pillow</span>
+      <span class="pill">NumPy</span>
+    </div>
+  </div>
+  <div class="hero-deco" aria-hidden="true">
+    <div class="deco-circle c1"></div>
+    <div class="deco-circle c2"></div>
+    <div class="deco-circle c3"></div>
+  </div>
+</section>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- Profile Form -->
+  <section class="form-section" id="formSection">
+
+    <!-- Photo Upload -->
+    <div class="card upload-card">
+      <div class="card-label">01 — Photo</div>
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-idle" id="uploadIdle">
+          <div class="upload-icon">◈</div>
+          <p class="upload-title">Drop your photo here</p>
+          <p class="upload-sub">OpenCV will detect your face & extract skin tone</p>
+          <p class="upload-hint">JPG · PNG · WEBP · max 16 MB</p>
+        </div>
+        <div class="upload-preview hidden" id="uploadPreview">
+          <img id="previewImg" src="" alt="Preview" />
+          <div class="preview-overlay">
+            <span>Click to change</span>
+          </div>
+          <div class="cv-badge" id="cvBadge">OpenCV Ready</div>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" class="hidden" />
+      </div>
+    </div>
+
+    <!-- Profile Grid -->
+    <div class="profile-grid">
+
+      <!-- Gender -->
+      <div class="card">
+        <div class="card-label">02 — Gender</div>
+        <div class="chip-row" id="genderChips" data-single="true">
+          <button class="chip" data-value="Male">Male</button>
+          <button class="chip" data-value="Female">Female</button>
+          <button class="chip" data-value="Non-binary">Non-binary</button>
+          <button class="chip" data-value="Fluid">Fluid</button>
+        </div>
+      </div>
+
+      <!-- Skin Tone -->
+      <div class="card">
+        <div class="card-label">03 — Skin Tone <span class="optional">(auto-detected from photo)</span></div>
+        <div class="tone-row" id="toneChips">
+          <button class="tone-btn" data-value="fair" style="--tone:#FDDBB4" title="Fair">
+            <span class="tone-swatch"></span><span class="tone-label">Fair</span>
+          </button>
+          <button class="tone-btn" data-value="light" style="--tone:#E8B88A" title="Light">
+            <span class="tone-swatch"></span><span class="tone-label">Light</span>
+          </button>
+          <button class="tone-btn" data-value="medium" style="--tone:#C68642" title="Medium">
+            <span class="tone-swatch"></span><span class="tone-label">Medium</span>
+          </button>
+          <button class="tone-btn" data-value="tan" style="--tone:#A0522D" title="Tan">
+            <span class="tone-swatch"></span><span class="tone-label">Tan</span>
+          </button>
+          <button class="tone-btn" data-value="deep" style="--tone:#6B3A2A" title="Deep">
+            <span class="tone-swatch"></span><span class="tone-label">Deep</span>
+          </button>
+          <button class="tone-btn" data-value="ebony" style="--tone:#3B1F13" title="Ebony">
+            <span class="tone-swatch"></span><span class="tone-label">Ebony</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Personas -->
+      <div class="card">
+        <div class="card-label">04 — Style Persona <span class="optional">pick up to 3</span></div>
+        <div class="chip-row" id="personaChips" data-max="3">
+          <button class="chip" data-value="minimalist">◻ Minimalist</button>
+          <button class="chip" data-value="streetwear">◈ Streetwear</button>
+          <button class="chip" data-value="classic">◇ Classic</button>
+          <button class="chip" data-value="bohemian">✦ Bohemian</button>
+          <button class="chip" data-value="avant-garde">◬ Avant-Garde</button>
+          <button class="chip" data-value="romantic">◉ Romantic</button>
+          <button class="chip" data-value="sporty">⬡ Sporty</button>
+          <button class="chip" data-value="preppy">▲ Preppy</button>
+        </div>
+      </div>
+
+      <!-- Occasions -->
+      <div class="card">
+        <div class="card-label">05 — Occasions</div>
+        <div class="chip-row" id="occasionChips">
+          <button class="chip" data-value="Everyday">Everyday</button>
+          <button class="chip" data-value="Work">Work</button>
+          <button class="chip" data-value="Date Night">Date Night</button>
+          <button class="chip" data-value="Formal">Formal</button>
+          <button class="chip" data-value="Vacation">Vacation</button>
+          <button class="chip" data-value="Festival">Festival</button>
+          <button class="chip" data-value="Athletic">Athletic</button>
+        </div>
+      </div>
+
+      <!-- Budget / Age / Body -->
+      <div class="card">
+        <div class="card-label">06 — Details</div>
+        <div class="details-grid">
+          <div class="detail-field">
+            <label>Budget</label>
+            <div class="chip-row" id="budgetChips" data-single="true">
+              <button class="chip" data-value="budget">Budget</button>
+              <button class="chip active" data-value="mid-range">Mid-Range</button>
+              <button class="chip" data-value="luxury">Luxury</button>
+            </div>
+          </div>
+          <div class="detail-field">
+            <label>Age <span class="optional">(optional)</span></label>
+            <input type="number" id="ageInput" placeholder="e.g. 28" min="13" max="99" class="text-input w-20" />
+          </div>
+          <div class="detail-field">
+            <label>Body Type <span class="optional">(optional)</span></label>
+            <div class="chip-row" id="bodyChips" data-single="true">
+              <button class="chip" data-value="slim">Slim</button>
+              <button class="chip" data-value="athletic">Athletic</button>
+              <button class="chip" data-value="average">Average</button>
+              <button class="chip" data-value="curvy">Curvy</button>
+              <button class="chip" data-value="plus">Plus</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <div class="card-label">07 — Tell the Stylist More</div>
+        <textarea id="notesInput" rows="3" placeholder="e.g. I have broad shoulders, love earthy tones, work in a creative agency, prefer sustainable brands…" class="textarea"></textarea>
+      </div>
+
+    </div><!-- /profile-grid -->
+
+    <!-- Submit -->
+    <div class="submit-zone">
+      <div id="errorBanner" class="error-banner hidden"></div>
+      <button class="analyse-btn" id="analyseBtn">
+        <span class="btn-text">Generate My Style Profile</span>
+        <span class="btn-sub">Powered by LLaMA 3.3 70B × OpenCV</span>
+      </button>
+    </div>
+
+  </section><!-- /form-section -->
+
+  <!-- Loading State -->
+  <section class="loading-section hidden" id="loadingSection">
+    <div class="loading-inner">
+      <div class="loading-ring"></div>
+      <div class="loading-steps" id="loadingSteps">
+        <p class="step active" data-step="1">Running OpenCV face detection…</p>
+        <p class="step" data-step="2">Extracting skin tone with PIL…</p>
+        <p class="step" data-step="3">Analysing colour palette via NumPy…</p>
+        <p class="step" data-step="4">Sending to LLaMA 3.3 70B via Groq…</p>
+        <p class="step" data-step="5">Building your style profile…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section class="results-section hidden" id="resultsSection">
+
+    <!-- Style Identity Banner -->
+    <div class="identity-banner" id="identityBanner"></div>
+
+    <!-- CV Analysis Card -->
+    <div class="cv-panel" id="cvPanel"></div>
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-tab="outfits">Outfits</button>
+      <button class="tab-btn" data-tab="palette">Colour Palette</button>
+      <button class="tab-btn" data-tab="wardrobe">Wardrobe</button>
+      <button class="tab-btn" data-tab="insights">Insights</button>
+    </div>
+
+    <div class="tab-content" id="tabOutfits"></div>
+    <div class="tab-content hidden" id="tabPalette"></div>
+    <div class="tab-content hidden" id="tabWardrobe"></div>
+    <div class="tab-content hidden" id="tabInsights"></div>
+
+    <!-- Redo -->
+    <div class="redo-zone">
+      <button class="redo-btn" id="redoBtn">← Edit Profile &amp; Regenerate</button>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>StyleAI · Flask + Groq LLaMA 3.3 70B + OpenCV + PIL + NumPy · Your images are never stored</p>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
